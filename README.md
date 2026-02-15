@@ -1,7 +1,3 @@
-# Simple Quiz
+# Super, Simple Quizzes
 
-Just a simple stupid quiz app written in Java and can run using the console.
-
-## Usage:
-- Clone the app.
-- Compile then run the Main class file.
+Simple quiz CLI application Written in Go. Quizzes can be prepared with a CSV file or fetched from an API.
