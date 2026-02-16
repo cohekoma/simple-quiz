@@ -24,7 +24,7 @@ func main() {
 		quitApp("Failed to parse the CSV file! Try using another file")
 	}
 
-	parsedQuizzes := parseLines(lines)
+	parsedQuizzes := parseRows(lines)
 	fmt.Println(parsedQuizzes)
 }
 
@@ -33,7 +33,7 @@ type quiz struct {
 	answer   string
 }
 
-func parseLines(lines [][]string) (quizzes []quiz) {
+func parseRows(lines [][]string) (quizzes []quiz) {
 	result := make([]quiz, len(lines))
 	for i, line := range lines {
 		result[i] = quiz{
