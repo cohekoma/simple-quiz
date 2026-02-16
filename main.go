@@ -5,6 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"strings"
 )
 
 func main() {
@@ -38,7 +39,7 @@ func parseRows(lines [][]string) (quizzes []quiz) {
 	for i, line := range lines {
 		result[i] = quiz{
 			question: line[0],
-			answer:   line[1],
+			answer:   strings.TrimSpace(line[1]),
 		}
 	}
 
