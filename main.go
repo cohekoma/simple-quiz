@@ -25,7 +25,7 @@ func main() {
 	}
 
 	parsedQuizzes := parseRows(lines)
-	fmt.Println(parsedQuizzes)
+	playQuiz(parsedQuizzes)
 }
 
 type quiz struct {
@@ -43,6 +43,21 @@ func parseRows(lines [][]string) (quizzes []quiz) {
 	}
 
 	return result
+}
+
+func playQuiz(quizzes []quiz) {
+	score := 0
+	for i, quiz := range quizzes {
+		fmt.Printf("Question #%d: %s\n", i+1, quiz.question)
+		var userAnswer string
+		fmt.Scanf("%s\n", &userAnswer)
+
+		if userAnswer == quiz.answer {
+			score++
+		}
+	}
+
+	fmt.Printf("You got %d points out of %d questions!\n", score, len(quizzes))
 }
 
 func quitApp(msg string) {
