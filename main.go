@@ -6,10 +6,12 @@ import (
 	"fmt"
 	"os"
 	"strings"
+	"time"
 )
 
 func main() {
 	csvFileName := flag.String("csv", "quizzes.csv", "default csv file for quizzes, format: question,answer")
+	timeLimit := flag.Int("timeLimit", 2, "time limit for each question, default is 2s.")
 	flag.Parse()
 
 	file, err := os.Open(*csvFileName)
@@ -26,7 +28,7 @@ func main() {
 	}
 
 	parsedQuizzes := parseRows(lines)
-	playQuiz(parsedQuizzes)
+	playQuiz(parsedQuizzes, timeLimit)
 }
 
 type quiz struct {
@@ -46,15 +48,26 @@ func parseRows(lines [][]string) (quizzes []quiz) {
 	return result
 }
 
-func playQuiz(quizzes []quiz) {
+func playQuiz(quizzes []quiz, timeLimit *int) {
 	score := 0
+	answerCh := make(chan string)
 	for i, quiz := range quizzes {
+		timer := time.NewTimer(time.Duration(*timeLimit) * time.Second)
 		fmt.Printf("Question #%d: %s\n", i+1, quiz.question)
-		var userAnswer string
-		fmt.Scanf("%s\n", &userAnswer)
 
-		if userAnswer == quiz.answer {
-			score++
+		go func() {
+			var userAnswer string
+			fmt.Scanf("%s\n", &userAnswer)
+			answerCh <- userAnswer
+		}()
+
+		select {
+		case ans := <-answerCh:
+			if ans == quiz.answer {
+				score++
+			}
+		case <-timer.C:
+			quitApp("Timeout!")
 		}
 	}
 
