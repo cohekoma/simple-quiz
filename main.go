@@ -6,11 +6,13 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"os/exec"
 	"strings"
 	"time"
 )
 
 func main() {
+	clearTerminal()
 	csvFileName := flag.String("csv", "quizzes.csv", "default csv file for quizzes, format: question,answer")
 	timeLimit := flag.Int("timeLimit", 2, "time limit for each question, default is 2s.")
 	flag.Parse()
@@ -83,6 +85,12 @@ func playQuiz(quizzes []quiz, timeLimit *int) {
 	}
 
 	fmt.Printf("You got %d points out of %d questions!\n", score, len(quizzes))
+}
+
+func clearTerminal() {
+	cmd := exec.Command("clear", "")
+	cmd.Stdout = os.Stdout
+	cmd.Run()
 }
 
 func quitApp(msg string) {
