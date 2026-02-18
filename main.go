@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"encoding/csv"
 	"flag"
 	"fmt"
@@ -53,11 +54,21 @@ func playQuiz(quizzes []quiz, timeLimit *int) {
 	answerCh := make(chan string)
 	for i, quiz := range quizzes {
 		timer := time.NewTimer(time.Duration(*timeLimit) * time.Second)
+		reader := bufio.NewReader(os.Stdin)
 		fmt.Printf("Question #%d: %s\n", i+1, quiz.question)
 
 		go func() {
-			var userAnswer string
-			fmt.Scanf("%s\n", &userAnswer)
+			userAnswer, err := reader.ReadString('\n')
+
+			if err != nil {
+				quitApp("Fail to read your input, try again.")
+			}
+
+			userAnswer = strings.TrimSpace(userAnswer)
+			fmt.Printf("Your answer: %s\n", userAnswer)
+
+			// var userAnswer string
+			// fmt.Scanf("%s\n", &userAnswer)
 			answerCh <- userAnswer
 		}()
 
